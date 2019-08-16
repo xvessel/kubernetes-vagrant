@@ -1,0 +1,70 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+  # The most common configuration options are documented and commented below.
+  # For a complete reference, please see the online documentation at
+  # https://docs.vagrantup.com.
+
+  # Every Vagrant development environment requires a box. You can search for
+  # boxes at https://vagrantcloud.com/search.
+  config.vm.provider "virtualbox" do |vb|
+    vb.gui = false
+    vb.memory = "4096"
+    vb.cpus = 2
+  end
+  config.vm.synced_folder ".", "/vagrant"
+  config.vm.provision "shell", path: "./vagrant-init.sh"
+
+
+  config.vm.define "dev1" do |dev1|
+    dev1.vm.box = "generic/centos7"
+    dev1.vm.hostname = "dev1"
+    dev1.vm.network "private_network", ip: "100.64.0.11"
+
+    dev1.vm.provider "virtualbox" do |vb|
+       disk='./dev1-disk.vdi'
+       unless File.exist?(disk)
+         vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 20 * 1024]
+       end
+       vb.customize ['storageattach', :id,  '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
+  end
+
+  config.vm.define "dev2" do |dev2|
+    dev2.vm.box = "generic/centos7"
+    dev2.vm.hostname = "dev2"
+    dev2.vm.network "private_network", ip: "100.64.0.12"
+
+    dev2.vm.provider "virtualbox" do |vb|
+       disk='./dev2-disk.vdi'
+       unless File.exist?(disk)
+         vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 20 * 1024]
+       end
+       vb.customize ['storageattach', :id,  '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
+  end
+
+  config.vm.define "dev3" do |dev3|
+    dev3.vm.box = "generic/centos7"
+    dev3.vm.hostname = "dev3"
+    dev3.vm.network "private_network", ip: "100.64.0.13"
+
+    dev3.vm.provider "virtualbox" do |vb|
+       disk='./dev3-disk.vdi'
+       unless File.exist?(disk)
+         vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 20 * 1024]
+       end
+       vb.customize ['storageattach', :id,  '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
+  end
+
+  # config.vm.provision "shell", inline: <<-SHELL
+  #   apt-get update
+  #   apt-get install -y apache2
+  # SHELL
+end

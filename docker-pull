@@ -1,0 +1,46 @@
+#!/usr/bin/bash
+
+#https://www.ilanni.com/?p=14534
+url=$1
+
+DOCKER_MIR='dockerhub.azk8s.cn/library'
+DOCKER_CU_MIR='dockerhub.azk8s.cn'
+GCR_MIR='gcr.azk8s.cn'
+K8S_MIR='gcr.azk8s.cn/google-containers'
+QUAY_MIR='quay.azk8s.cn'
+
+#gcr.io/xxx/yyy:zzz     gcr.mirrors.ustc.edu.cn/xxx/yyy:zzz
+if [[ $url ==  gcr.io* ]]
+then
+newurl=${url/gcr.io/$GCR_MIR}
+
+#k8s.gcr.io/xxx:yyy  gcr.io/google-containers/xxx:yyy
+elif [[ $url ==  k8s.gcr.io* ]]
+then
+newurl=${url/k8s.gcr.io/$K8S_MIR}
+
+#quay.io/xxx/yyy:zzz  quay.mirrors.ustc.edu.cn/xxx/yyy:zzz
+elif [[ $url ==  quay.io* ]]
+then
+newurl=${url/quay.io/$QUAY_MIR}
+
+#xxx/yyy:zz   docker.mirrors.ustc.edu.cn/xxx/yyy:zz
+elif [[ $url =~  ^[^/]+/[^/]+$ ]]
+then
+newurl=${DOCKER_CU_MIR}'/'$url
+
+#xxx:yyy docker.mirrors.ustc.edu.cn/library/xxx:yyy
+elif [[ $url =~  ^[^/]+$ ]]
+then
+newurl=${DOCKER_MIR}'/'$url
+fi
+
+echo $url'  =>  '$newurl
+
+if [[ $newurl != '' ]]
+then 
+docker pull $newurl
+docker tag $newurl $url 
+else
+docker pull $url
+fi
