@@ -1,0 +1,60 @@
+---
+- hosts: all
+  remote_user: root
+  tasks:
+      - name: deploy prepare.sh
+        become: yes
+        become_method: sudo
+        become_user: root
+        script: ./prepare.sh 
+
+      - name: reset
+        become: yes
+        become_method: sudo
+        become_user: root
+        script: ./reset.sh 
+
+      - name: copy docker-pull
+        become: yes
+        become_method: sudo
+        become_user: root
+        copy: src=./docker-pull dest=/usr/bin/
+        mode: 0777 
+
+- hosts: master
+  remote_user: root
+  tasks:
+      - name: copy kube-flannel.yml
+        become: yes
+        become_method: sudo
+        become_user: root
+        copy: src=./kube-flannel.yml dest=./
+        mode: 0777 
+
+      - name: deploy master
+        become: yes
+        become_method: sudo
+        become_user: root
+        script: ./master.sh 
+
+      - name: fetch kubeadm join cmd for nodes
+        become: yes
+        become_method: sudo
+        become_user: root
+        fetch: src=/tmp/kubeadm-join.sh dest=/tmp/
+        mode: 0744
+
+- hosts: nodes
+  remote_user: root
+  tasks:
+      - name: deploy node
+        become: yes
+        become_method: sudo
+        become_user: root
+        script: ./node.sh 
+
+      - name: kubeadm join
+        become: yes
+        become_method: sudo
+        become_user: root
+        script: /tmp/kubeadm-join.sh 

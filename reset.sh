@@ -1,12 +1,13 @@
 #!/bin/bash
-set -e 
 
 for i in $(systemctl list-unit-files --no-legend --no-pager -l | grep --color=never -o .*.slice | grep kubepod);
 do systemctl stop $i;
 done
-kubeadm reset
+kubeadm reset -f
 
 iptables -F && iptables -t nat -F && iptables -t mangle -F && iptables -X
+
+rm -rf /var/lib/etcd
 
 systemctl stop kubelet
 systemctl stop docker

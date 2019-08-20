@@ -5,6 +5,8 @@
 # configures the configuration version (we support older styles for
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
+#
+
 Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
   # For a complete reference, please see the online documentation at
@@ -18,6 +20,11 @@ Vagrant.configure("2") do |config|
     vb.cpus = 2
   end
   config.vm.synced_folder ".", "/vagrant"
+  config.vm.provision "shell", inline: <<-SHELL
+  sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+  sudo systemctl restart sshd
+  SHELL
+
 
   config.vm.define "dev1" do |dev1|
     dev1.vm.box = "generic/centos7"
