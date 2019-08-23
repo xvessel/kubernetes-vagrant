@@ -8,6 +8,7 @@ pip install notario
 pip install ansible==2.6.18
 yum install -y sshpass
 
+mkdir /etc/ansible
 cat <<EOF > /etc/ansible/ansible.cfg
 [defaults]
 host_key_checking = False
