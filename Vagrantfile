@@ -14,6 +14,7 @@ Vagrant.configure("2") do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://vagrantcloud.com/search.
+  config.vm.box_check_update = false
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = "4096"
@@ -29,25 +30,66 @@ Vagrant.configure("2") do |config|
   config.vm.define "dev1" do |dev1|
     dev1.vm.box = "generic/centos7"
     dev1.vm.hostname = "dev1"
-    dev1.vm.network "private_network", ip: "100.64.0.11"
+    dev1.vm.network "private_network", ip: "100.64.11.11"
   end
 
   config.vm.define "dev2" do |dev2|
     dev2.vm.box = "generic/centos7"
     dev2.vm.hostname = "dev2"
-    dev2.vm.network "private_network", ip: "100.64.0.12"
+    dev2.vm.network "private_network", ip: "100.64.11.12"
   end
 
   config.vm.define "dev3" do |dev3|
     dev3.vm.box = "generic/centos7"
     dev3.vm.hostname = "dev3"
-    dev3.vm.network "private_network", ip: "100.64.0.13"
+    dev3.vm.network "private_network", ip: "100.64.11.13"
+  end
+
+  config.vm.define "dev4" do |dev4|
+    dev4.vm.box = "generic/centos7"
+    dev4.vm.hostname = "dev4"
+    dev4.vm.network "private_network", ip: "100.64.11.14"
+
+    dev4.vm.provider "virtualbox" do |vb|
+       disk='./dev4-disk.vdi'
+       unless File.exist?(disk)
+         vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 40 * 1024]
+       end
+       vb.customize ['storageattach', :id,  '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
+  end
+
+  config.vm.define "dev5" do |dev5|
+    dev5.vm.box = "generic/centos7"
+    dev5.vm.hostname = "dev5"
+    dev5.vm.network "private_network", ip: "100.64.11.15"
+
+    dev5.vm.provider "virtualbox" do |vb|
+       disk='./dev5-disk.vdi'
+       unless File.exist?(disk)
+         vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 40 * 1024]
+       end
+       vb.customize ['storageattach', :id,  '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
+  end
+
+  config.vm.define "dev6" do |dev6|
+    dev6.vm.box = "generic/centos7"
+    dev6.vm.hostname = "dev6"
+    dev6.vm.network "private_network", ip: "100.64.11.16"
+
+    dev6.vm.provider "virtualbox" do |vb|
+       disk='./dev6-disk.vdi'
+       unless File.exist?(disk)
+         vb.customize ['createhd', '--filename', disk, '--variant', 'Fixed', '--size', 40 * 1024]
+       end
+       vb.customize ['storageattach', :id,  '--storagectl', 'IDE Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', disk]
+    end
   end
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
-  # config.vm.box_check_update = false
 
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,

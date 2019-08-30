@@ -1,5 +1,5 @@
 [master]
-100.64.0.11 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+100.64.11.11 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
 [nodes]
-100.64.0.12 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
-100.64.0.13 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+100.64.11.12 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant
+100.64.11.13 ansible_ssh_user=vagrant ansible_ssh_pass=vagrant

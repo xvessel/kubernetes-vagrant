@@ -12,17 +12,17 @@ docker-pull k8s.gcr.io/coredns:1.3.1
 docker-pull k8s.gcr.io/etcd:3.3.10
 docker-pull k8s.gcr.io/pause:3.1
 
-nodeip=`ip addr show dev eth1  | grep "100\.64\.0\.1[0-9]" -o`
+nodeip=`ip addr show dev eth1  | grep "100\.64\.[0-9]*\.[0-9]*" -o | head -1`
 
 sed -i "s/KUBELET_EXTRA_ARGS *$/KUBELET_EXTRA_ARGS --node-ip=${nodeip}/g" /usr/lib/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 
 #kubeadm config print init-defaults  > init.default.yaml
-#sed -i 's/advertiseAddress:.*/advertiseAddress: 100.64.0.11/g' init.default.yaml
+#sed -i 's/advertiseAddress:.*/advertiseAddress: 100.64.11.11/g' init.default.yaml
 #sed -i 's/kubernetesVersion: v1.14.0/kubernetesVersion: v1.15.0/g' init.default.yaml
 #kubeadm  init --config=init.default.yaml --pod-network-cidr=10.244.0.0/16 > kubeadm.log
 
-kubeadm  init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=100.64.0.11 > kubeadm.log
+kubeadm  init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=100.64.11.11 > kubeadm.log
 
 ################
 #To start using your cluster, you need to run the following as a regular user:
