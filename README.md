@@ -37,5 +37,8 @@ sudo -s
 
 # 安装 ceph
 ./ceph-install.sh
+
+# storage class for rbd 
+./storage-class.sh
 ```
 
